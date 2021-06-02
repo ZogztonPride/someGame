@@ -7,6 +7,11 @@ class Character:
         self.maxHp = maxHp
         self.hp = maxHp
         self.attackCD = 0
+        self.attack = 0
+        
+    def displayHP(self):
+        w = str(self.hp) + "/" + str(self.maxHp)
+        return str(w)
 
 class Player(Character):
     def __init__(self,maxHp):
@@ -28,20 +33,40 @@ class Player(Character):
         if self.dodgeCD != 0:   
             self.dodgeCD -= 1
     
-    def displayHP(self):
-        print("You have " + str(self.hp) + "/" + str(self.maxHp) + " hitpoints.")
+    
+    
+    def chooseAttack(self, x):
+            if x.lower() == "strike":
+                if self.attackCD == 0:
+                    print("You try to strike your foe...")
+                    self.attack = 0
+                    return True
+                return False
+            elif x.lower() == "dodge":
+                if self.dodgeCD == 0:
+                    print("You try to dodge your foe...")
+                    self.attack = 1
+                    self.dodgeCD += 2
+                    return True
+                return False
+            else:
+                print("Don't talk gibberish.")
+                return False
+    
+    def commitAttack(self):
+        if self.attack == 0:
+            return random.randint(2,4)
+        if self.attack == 1:
+            return -1
+        
         
 class Enemy(Character):
     def __init__(self,maxHp):
         super().__init__(maxHp)
-        self.attack = 0
-        self.blockCD = 0
 
     def cooldownOptions(self):
         if self.attackCD != 0:
             self.attackCD -= 1
-        if self.blockCD != 0:   
-            self.blockCD -= 1
     
     def chooseAttack(self):
         while True:
@@ -51,21 +76,12 @@ class Enemy(Character):
                     print("The enemy is trying to strike you!")
                     self.attack = 0
                     break
-            if n == 1:
-                if self.blockCD == 0:
-                    print("The enemy is preparing for a blow")
-                    self.attack = 1
-                    self.blockCD += 2
-                    break
+            else:
+                continue
     
     def commitAttack(self):
         if self.attack == 0:
-            dmg = random.randint(2,4)
-            print("The enemy strikes you for " + str(dmg) + " points of damage!")
-            return dmg
-        elif self.attack == 1:
-            print("The enemy blocks your attack!")
-            return 0
+            return random.randint(2,4)
         
 p = Player(10)
 e = None    
@@ -77,7 +93,7 @@ while True:
     print(" ")
     if e == None or e.hp <= 0:
         e = Enemy(random.randint(1,5))
-        print("A new enemy aproaches with " + str(e.hp) + " hitpoints!")
+        print("A new enemy aproaches with " + str(e.displayHP) + " hitpoints!")
         print(" ")
         time.sleep(1)
     e.chooseAttack()
@@ -85,39 +101,41 @@ while True:
     x = ""
     print("")
     
-    #The player's options. Note that every cooldown has to +1 the wanted cooldown value, since it will no matter what reduce every cooldown with 1.
     while True:
         x = input("What is your aproach:")
-        #Strikes the opponent for some damage.
-        if x.lower() == "strike":
-            dmg = random.randint(1,2)
-            e.hp -= dmg
-            print("You strike your enemy with " + str(dmg) + " points of damage, leaving the enemy at " + str(e.hp) + " hitpoints!")
-            break
-        #Dodges an attack completely.
-        elif x.lower() == "dodge":
-            if p.dodgeCD == 0:
-                print("You dodged the enemy, even though he can't attack yet in the current state of this shiz program")
-                p.dodgeCD += 2
-                break
-            print("Your dodge action has to cooldown for " + str(p.dodgeCD) + " turns.")
+        
         #Brings out the list of commands.
-        elif x.lower() == "help":
+        if x.lower() == "help":
             p.help()
+        #Displays the players hp.
         elif x.lower() == "hp":
-            p.displayHP()
+            print("You have " + p.displayHP() + " hitpoints.")
+        #Displays the enemy's hp.
+        elif x.lower() == "enemyhp":
+            print("Your enemy has " + e.displayHP() + " hitpoints.")
         #Quits the game. Rename the input later
         elif x.lower() == "giveup" or x.lower() == "g":
             print("COWARD!")
             break
         else:
-            print("I do not understand gibberish")
-    
+            if p.chooseAttack(x) == True:
+                break
     if x.lower() == "giveup":
         break    
     
-    p.hp -= e.commitAttack()
-    p.displayHP()
+    pA = p.commitAttack
+    eA = e.commitAttack
+    if pA == -1:
+        pA = eA
+        
+    if pA > eA:
+        e.hp -= pA - eA
+        print("You strike your enemy with " + str(pA - eA) + "damage, leaving it with " + e.displayHP + " hitpoints!")
+    elif pA < eA:
+        p.hp -= eA - pA
+        print("You are struck by your foe with " + str(eA - pA) + "damage, leaving you with " + p.displayHP + " hitpoints!")
+    else:
+        print("You clash with the enemy")
     p.cooldownOptions()
     e.cooldownOptions()
 
