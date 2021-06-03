@@ -10,8 +10,7 @@ class Character:
         self.attack = 0
         
     def displayHP(self):
-        w = str(self.hp) + "/" + str(self.maxHp)
-        return str(w)
+        return str(self.hp) + "/" + str(self.maxHp)
 
 class Player(Character):
     def __init__(self,maxHp):
@@ -86,14 +85,14 @@ class Enemy(Character):
 p = Player(10)
 e = None    
 
-
-
 #Where the game begins
 while True:
     print(" ")
+    
     if e == None or e.hp <= 0:
         e = Enemy(random.randint(1,5))
-        print("A new enemy aproaches with " + str(e.displayHP) + " hitpoints!")
+        #THESHIZZ!?!??!
+        print("A new enemy aproaches with " + e.displayHP() + " hitpoints!")
         print(" ")
         time.sleep(1)
     e.chooseAttack()
@@ -123,17 +122,18 @@ while True:
     if x.lower() == "giveup":
         break    
     
-    pA = p.commitAttack
-    eA = e.commitAttack
+    pA = p.commitAttack()
+    eA = e.commitAttack()
+    #THESHIZZ!?!??!
     if pA == -1:
         pA = eA
         
     if pA > eA:
         e.hp -= pA - eA
-        print("You strike your enemy with " + str(pA - eA) + "damage, leaving it with " + e.displayHP + " hitpoints!")
+        print("You strike your enemy with " + str(pA - eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
     elif pA < eA:
         p.hp -= eA - pA
-        print("You are struck by your foe with " + str(eA - pA) + "damage, leaving you with " + p.displayHP + " hitpoints!")
+        print("You are struck by your foe with " + str(eA - pA) + " damage, leaving you with " + p.displayHP() + " hitpoints!")
     else:
         print("You clash with the enemy")
     p.cooldownOptions()
