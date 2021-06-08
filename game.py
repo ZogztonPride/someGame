@@ -6,13 +6,14 @@ class Character:
     def __init__(self,maxHp):
         self.maxHp = maxHp
         self.hp = maxHp
-        self.lightAttackCD = 0
+        self.attack = 0
         self.lightAttackCD = 0
         self.mediumAttackCD = 0
         self.heavyAttackCD = 0
         
     def displayHP(self):
         return str(self.hp) + "/" + str(self.maxHp)
+
     def cooldownOptions(self):
         if self.lightAttackCD != 0:
             self.lightAttackCD -= 1
@@ -26,6 +27,14 @@ class Player(Character):
         super().__init__(maxHp)
         self.clashCD = 0
     
+class TestCharacter(Player):
+    def __init__(self):
+        super().__init__(10)
+    
+    def cooldownClass(self):
+        if self.clashCD != 0:   
+            self.clashCD -= 1
+    
     #Displays commands
     def help(self):
         print("Options:")
@@ -33,16 +42,12 @@ class Player(Character):
         print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
         print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
         print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
+        print("Hp: Display your current health.")
+        print("EnemyHp: Display your enemy's current hp.")
         print("Help: Get a list of commands.")
         print("GiveUp: Give up like the coward you are.")
         print("")
-    
-    def cooldownClass(self):
-        if self.clashCD != 0:   
-            self.clashCD -= 1
-    
-    
-    
+
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
                 if self.lightAttackCD == 0:
@@ -50,32 +55,76 @@ class Player(Character):
                     self.attack = 0
                     self.lightAttackCD += 0
                     return True
-                return False
             elif x.lower() == "mediumattack":
                 if self.mediumAttackCD == 0:
                     print("You try to strike your foe with a good punch...")
                     self.attack = 1
-                    self.mediumAttackCD += 2
+                    self.mediumAttackCD += 3
                     return True
-                return False
             elif x.lower() == "heavyattack":
                 if self.heavyAttackCD == 0:
                     print("You try to hit your foe very hard...")
                     self.attack = 2
-                    self.heavyAttackCD += 3
+                    self.heavyAttackCD += 4
                     return True
-                return False
             elif x.lower() == "clash":
                 if self.clashCD == 0:
                     print("You try to force a clash with your foe...")
                     self.attack = 3
-                    self.clashCD += 3
+                    self.clashCD += 4
                     return True
-                return False
             else:
                 print("Don't talk gibberish.")
-                return False
+
+class Fencer(Player):
+    def __init__(self):
+        super().__init__(10)
     
+    def cooldownClass(self):
+        if self.clashCD != 0:   
+            self.clashCD -= 1
+    
+    #Displays commands
+    def help(self):
+        print("Options:")
+        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
+        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
+        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
+        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
+        print("Hp: Display your current health.")
+        print("EnemyHp: Display your enemy's current hp.")
+        print("Help: Get a list of commands.")
+        print("GiveUp: Give up like the coward you are.")
+        print("")
+
+    def chooseAttack(self, x):
+            if x.lower() == "lightattack":
+                if self.lightAttackCD == 0:
+                    print("You try to strike your foe with a quick jab...")
+                    self.attack = 0
+                    self.lightAttackCD += 0
+                    return True
+            elif x.lower() == "mediumattack":
+                if self.mediumAttackCD == 0:
+                    print("You try to strike your foe with a good punch...")
+                    self.attack = 1
+                    self.mediumAttackCD += 3
+                    return True
+            elif x.lower() == "heavyattack":
+                if self.heavyAttackCD == 0:
+                    print("You try to hit your foe very hard...")
+                    self.attack = 2
+                    self.heavyAttackCD += 4
+                    return True
+            elif x.lower() == "clash":
+                if self.clashCD == 0:
+                    print("You try to force a clash with your foe...")
+                    self.attack = 3
+                    self.clashCD += 4
+                    return True
+            else:
+                print("Don't talk gibberish.")
+
     def commitAttack(self):
         #Light attack
         if self.attack == 0:
@@ -89,7 +138,6 @@ class Player(Character):
         #Clash
         elif self.attack == 3:
             return -1
-        
         
 class Enemy(Character):
     def __init__(self,maxHp):
@@ -126,8 +174,20 @@ class Enemy(Character):
             return random.randint(4,7)
         if self.attack == 2:
             return random.randint(8,10)
-        
-p = Player(10)
+
+killcount = 0
+p = None
+print("Character Select:")
+print("TestCharacter")
+while True:
+    x = input("Choose your character: ")
+    if x.lower() == "testcharacter":
+        p = TestCharacter()
+        break
+    else:
+        print("Please input a real character.")
+
+
 e = None    
 
 #Where the game begins
@@ -144,6 +204,8 @@ while True:
     time.sleep(1)
     p.help()
     x = ""
+    #Testing print 
+    print("light: " + str(e.lightAttackCD) + " medium: " + str(e.mediumAttackCD) + " heavy: " + str(e.heavyAttackCD))
     print("")
     
     while True:
@@ -189,9 +251,10 @@ while True:
     e.cooldownOptions()
 
     if p.hp <= 0:
-        print("You are dead now, and will never return.")
+        print("You are dead now, and will never return. You slayed " + str(killcount) + " enemies.")
         break
     #Checks if the enemy is dead
     if e.hp <= 0:
         print("You slayed your foe!")
+        killcount += 1
     time.sleep(2)
