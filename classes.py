@@ -1,7 +1,6 @@
 import random
 import time
 
-
 class Character:
     def __init__(self,maxHp):
         self.maxHp = maxHp

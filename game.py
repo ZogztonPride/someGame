@@ -25,7 +25,6 @@ e = None
 
 while True:
     print(" ")
-    
     #Checks if there are any enemy present. If not, it creates a new Enemy instance
     if e == None or e.hp <= 0:
         e = Enemy(random.randint(3,7))
@@ -37,6 +36,7 @@ while True:
     time.sleep(1)
     p.chaHelp
     x = ""
+    #ONLY HERE FOR TESTING PURPOSES
     #print("light: " + str(e.lightAttackCD) + " medium: " + str(e.mediumAttackCD) + " heavy: " + str(e.heavyAttackCD))
     print("")
     #The player types a command to choose an attack, or option
