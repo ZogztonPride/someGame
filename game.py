@@ -10,6 +10,7 @@ class Character:
         self.lightAttackCD = 0
         self.mediumAttackCD = 0
         self.heavyAttackCD = 0
+        self.specialCooldown = 0
         
     def displayHP(self):
         return str(self.hp) + "/" + str(self.maxHp)
@@ -23,13 +24,14 @@ class Character:
             self.heavyAttackCD -= 1
 
 class Player(Character):
-    def __init__(self,maxHp):
+    def __init__(self,maxHp,type):
         super().__init__(maxHp)
+        self.type = type
         self.clashCD = 0
     
 class TestCharacter(Player):
     def __init__(self):
-        super().__init__(10)
+        super().__init__(10, "testCharacter")
     
     def cooldownClass(self):
         if self.clashCD != 0:   
@@ -78,7 +80,7 @@ class TestCharacter(Player):
 
 class Fencer(Player):
     def __init__(self):
-        super().__init__(10)
+        super().__init__(8, "fencer")
     
     def cooldownClass(self):
         if self.clashCD != 0:   
@@ -91,6 +93,7 @@ class Fencer(Player):
         print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
         print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
         print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
+        print("Riposte: Dodge the attack and strike an equal blow. specialCooldown: " + str(self.specialCooldown))
         print("Hp: Display your current health.")
         print("EnemyHp: Display your enemy's current hp.")
         print("Help: Get a list of commands.")
@@ -122,6 +125,12 @@ class Fencer(Player):
                     self.attack = 3
                     self.clashCD += 4
                     return True
+            elif x.lower() == "riposte":
+                if self.specialCooldown == 0:
+                    print("You prepare to riposte your enemy's next attack...")
+                    self.attack = 4
+                    self.specialCooldown += 3
+                    return True
             else:
                 print("Don't talk gibberish.")
 
@@ -138,6 +147,9 @@ class Fencer(Player):
         #Clash
         elif self.attack == 3:
             return -1
+        #Riposte(Fencer special)
+        elif self.attack == 4:
+            return -2
         
 class Enemy(Character):
     def __init__(self,maxHp):
@@ -177,12 +189,16 @@ class Enemy(Character):
 
 killcount = 0
 p = None
-print("Character Select:")
+print("Character Select!")
 print("TestCharacter")
+print("Fencer")
 while True:
     x = input("Choose your character: ")
     if x.lower() == "testcharacter":
         p = TestCharacter()
+        break
+    elif x.lower() == "fencer":
+        p = Fencer()
         break
     else:
         print("Please input a real character.")
@@ -195,7 +211,7 @@ while True:
     print(" ")
     
     if e == None or e.hp <= 0:
-        e = Enemy(random.randint(1,5))
+        e = Enemy(random.randint(3,7))
         #THESHIZZ!?!??!
         print("A new enemy aproaches with " + e.displayHP() + " hitpoints!")
         print(" ")
@@ -205,7 +221,7 @@ while True:
     p.help()
     x = ""
     #Testing print 
-    print("light: " + str(e.lightAttackCD) + " medium: " + str(e.mediumAttackCD) + " heavy: " + str(e.heavyAttackCD))
+    #print("light: " + str(e.lightAttackCD) + " medium: " + str(e.mediumAttackCD) + " heavy: " + str(e.heavyAttackCD))
     print("")
     
     while True:
@@ -237,15 +253,24 @@ while True:
     #Checks who is gonna do damage
     if pA == -1:
         pA = eA
-        
-    if pA > eA:
-        e.hp -= pA - eA
-        print("You strike your enemy with " + str(pA - eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
-    elif pA < eA:
-        p.hp -= eA - pA
-        print("You are struck by your foe with " + str(eA - pA) + " damage, leaving you with " + p.displayHP() + " hitpoints!")
-    else:
-        print("You clash with the enemy!")
+
+    if pA == -2: 
+        e.hp -= eA
+        print("You riposte the attack, and strike an equal blow, dealing " + str(eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
+    else:   
+        if pA > eA:
+            e.hp -= pA - eA
+            print("You strike your enemy with " + str(pA - eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
+        elif pA < eA:
+            p.hp -= eA - pA
+            print("You are struck by your foe with " + str(eA - pA) + " damage, leaving you with " + p.displayHP() + " hitpoints!")
+        else:
+            if p.type == "fencer":
+                r = random.randint(1,2)
+                e.hp -= r
+                print("You clash with the enemy, and slice your it before it recovers, dealing " + str(r) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
+            else:
+                print("You clash with the enemy!")
     p.cooldownOptions()
     p.cooldownClass()
     e.cooldownOptions()
@@ -257,4 +282,11 @@ while True:
     if e.hp <= 0:
         print("You slayed your foe!")
         killcount += 1
+        if p.specialCooldown > 0:
+            p.specialCooldown -= 1
+        if killcount % 4 == 0:
+            p.hp += 2
+            if p.maxHp < p.hp:
+                p.hp = p.maxHp
+        print("You have healed a bit of health! You are now at " + str(p.displayHP()) + " hp.")
     time.sleep(2)
