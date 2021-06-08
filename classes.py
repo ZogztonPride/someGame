@@ -24,10 +24,23 @@ class Character:
             self.heavyAttackCD -= 1
 
 class Player(Character):
-    def __init__(self,maxHp,type):
+    def __init__(self,maxHp,type,superDesc):
         super().__init__(maxHp)
         self.type = type
+        self.superDesc = superDesc
         self.clashCD = 0
+    def help(self, special):
+        print("Options:")
+        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
+        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
+        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
+        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
+        print(special)
+        print("Hp: Display your current health.")
+        print("EnemyHp: Display your enemy's current hp.")
+        print("Help: Get a list of commands.")
+        print("GiveUp: Give up like the coward you are.")
+        print("")
     
 class TestCharacter(Player):
     def __init__(self):
@@ -38,17 +51,7 @@ class TestCharacter(Player):
             self.clashCD -= 1
     
     #Displays commands
-    def help(self):
-        print("Options:")
-        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
-        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
-        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
-        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
-        print("Hp: Display your current health.")
-        print("EnemyHp: Display your enemy's current hp.")
-        print("Help: Get a list of commands.")
-        print("GiveUp: Give up like the coward you are.")
-        print("")
+    
 
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
@@ -80,25 +83,16 @@ class TestCharacter(Player):
 
 class Fencer(Player):
     def __init__(self):
-        super().__init__(8, "fencer")
+        super().__init__(8, "fencer","Riposte: Dodge the attack and strike an equal blow. specialCooldown: " + str(self.specialCooldown))
+    
+    def chaHelp(self):
+        help(self.superDesc)
     
     def cooldownClass(self):
         if self.clashCD != 0:   
             self.clashCD -= 1
     
-    #Displays commands
-    def help(self):
-        print("Options:")
-        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
-        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
-        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
-        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
-        print("Riposte: Dodge the attack and strike an equal blow. specialCooldown: " + str(self.specialCooldown))
-        print("Hp: Display your current health.")
-        print("EnemyHp: Display your enemy's current hp.")
-        print("Help: Get a list of commands.")
-        print("GiveUp: Give up like the coward you are.")
-        print("")
+    
 
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
