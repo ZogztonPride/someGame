@@ -28,6 +28,8 @@ class Player(Character):
         self.type = type
         self.superDesc = superDesc
         self.clashCD = 0
+    
+    #Displays commands
     def help(self, special):
         print("Options:")
         print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
@@ -41,6 +43,10 @@ class Player(Character):
         print("GiveUp: Give up like the coward you are.")
         print("")
     
+    def cooldownClass(self):
+        if self.clashCD != 0:   
+            self.clashCD -= 1
+
 class TestCharacter(Player):
     def __init__(self):
         super().__init__(10, "testCharacter")
@@ -49,9 +55,6 @@ class TestCharacter(Player):
         if self.clashCD != 0:   
             self.clashCD -= 1
     
-    #Displays commands
-    
-
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
                 if self.lightAttackCD == 0:
@@ -82,17 +85,12 @@ class TestCharacter(Player):
 
 class Fencer(Player):
     def __init__(self):
-        super().__init__(8, "fencer","Riposte: Dodge the attack and strike an equal blow. specialCooldown: " + str(self.specialCooldown))
+        self.specialCooldown = 0
+        super().__init__(8, "fencer","Riposte: Dodge the attack and strike an equal blow. SpecialCooldown: " + str(self.specialCooldown))
     
     def chaHelp(self):
-        help(self.superDesc)
+        self.help(self.superDesc)
     
-    def cooldownClass(self):
-        if self.clashCD != 0:   
-            self.clashCD -= 1
-    
-    
-
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
                 if self.lightAttackCD == 0:

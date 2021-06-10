@@ -20,7 +20,6 @@ while True:
         break
     else:
         print("Please input a real character.")
-
 e = None    
 
 while True:
@@ -34,7 +33,7 @@ while True:
     #The enemy chooses an attack
     e.chooseAttack()
     time.sleep(1)
-    p.chaHelp
+    p.chaHelp()
     x = ""
     #ONLY HERE FOR TESTING PURPOSES
     #print("light: " + str(e.lightAttackCD) + " medium: " + str(e.mediumAttackCD) + " heavy: " + str(e.heavyAttackCD))
@@ -44,7 +43,7 @@ while True:
         x = input("What is your aproach:")
         #Brings out the list of commands.
         if x.lower() == "help":
-            p.chaHelp
+            p.chaHelp()
         #Displays the players hp.
         elif x.lower() == "hp":
             print("You have " + p.displayHP() + " hitpoints.")
@@ -74,18 +73,15 @@ while True:
     if pA == -1:
         pA = eA
 
-    
     if pA == -2: 
         #Fencer Riposte
         e.hp -= eA
         print("You riposte the attack, and strike an equal blow, dealing " + str(eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
     else:   
-        
         if pA > eA:
             #Player wins the round
             e.hp -= pA - eA
             print("You strike your enemy with " + str(pA - eA) + " damage, leaving it with " + e.displayHP() + " hitpoints!")
-        
         elif pA < eA:
             #Enemy wins the round
             p.hp -= eA - pA
@@ -106,8 +102,7 @@ while True:
     if p.hp <= 0:
         #Checks if the player died
         print("You are dead now, and will never return. You slayed " + str(killcount) + " enemies.")
-        break
-    
+
     if e.hp <= 0:
         #Checks if the enemy is dead
         print("You slayed your foe!")
