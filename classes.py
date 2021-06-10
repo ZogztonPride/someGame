@@ -23,10 +23,10 @@ class Character:
             self.heavyAttackCD -= 1
 
 class Player(Character):
-    def __init__(self,maxHp,type,superDesc):
+    def __init__(self,maxHp,type):
         super().__init__(maxHp)
         self.type = type
-        self.superDesc = superDesc
+        self.superDesc = ""
         self.clashCD = 0
     
     #Displays commands
@@ -47,46 +47,10 @@ class Player(Character):
         if self.clashCD != 0:   
             self.clashCD -= 1
 
-class TestCharacter(Player):
-    def __init__(self):
-        super().__init__(10, "testCharacter")
-    
-    def cooldownClass(self):
-        if self.clashCD != 0:   
-            self.clashCD -= 1
-    
-    def chooseAttack(self, x):
-            if x.lower() == "lightattack":
-                if self.lightAttackCD == 0:
-                    print("You try to strike your foe with a quick jab...")
-                    self.attack = 0
-                    self.lightAttackCD += 0
-                    return True
-            elif x.lower() == "mediumattack":
-                if self.mediumAttackCD == 0:
-                    print("You try to strike your foe with a good punch...")
-                    self.attack = 1
-                    self.mediumAttackCD += 3
-                    return True
-            elif x.lower() == "heavyattack":
-                if self.heavyAttackCD == 0:
-                    print("You try to hit your foe very hard...")
-                    self.attack = 2
-                    self.heavyAttackCD += 4
-                    return True
-            elif x.lower() == "clash":
-                if self.clashCD == 0:
-                    print("You try to force a clash with your foe...")
-                    self.attack = 3
-                    self.clashCD += 4
-                    return True
-            else:
-                print("Don't talk gibberish.")
-
 class Fencer(Player):
     def __init__(self):
-        self.specialCooldown = 0
-        super().__init__(8, "fencer","Riposte: Dodge the attack and strike an equal blow. SpecialCooldown: " + str(self.specialCooldown))
+        super().__init__(8, "fencer")
+        self.superDesc = "Riposte: Dodge the attack and strike an equal blow. SpecialCooldown: " + str(self.specialCooldown)
     
     def chaHelp(self):
         self.help(self.superDesc)

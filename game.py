@@ -1,6 +1,5 @@
 import random
 import time
-from classes import TestCharacter
 from classes import Fencer
 from classes import Enemy
 
@@ -13,8 +12,7 @@ print("Fencer")
 while True:
     x = input("Choose your character: ")
     if x.lower() == "testcharacter":
-        p = TestCharacter()
-        break
+        continue
     elif x.lower() == "fencer":
         p = Fencer()
         break
@@ -98,7 +96,8 @@ while True:
     p.cooldownOptions()
     p.cooldownClass()
     e.cooldownOptions()
-    #This is the section for checking if anyone died
+    
+    #This is the section that checks if anyone died
     if p.hp <= 0:
         #Checks if the player died
         print("You are dead now, and will never return. You slayed " + str(killcount) + " enemies.")
@@ -113,5 +112,5 @@ while True:
             p.hp += 2
             if p.maxHp < p.hp:
                 p.hp = p.maxHp
-        print("You have healed a bit of health! You are now at " + str(p.displayHP()) + " hp.")
+            print("You have healed a bit of health! You are now at " + str(p.displayHP()) + " hp.")
     time.sleep(2)
