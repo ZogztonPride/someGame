@@ -26,22 +26,10 @@ class Player(Character):
     def __init__(self,maxHp,type):
         super().__init__(maxHp)
         self.type = type
-        self.superDesc = ""
         self.clashCD = 0
     
     #Displays commands
-    def help(self, special):
-        print("Options:")
-        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
-        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
-        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
-        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
-        print(special)
-        print("Hp: Display your current health.")
-        print("EnemyHp: Display your enemy's current hp.")
-        print("Help: Get a list of commands.")
-        print("GiveUp: Give up like the coward you are.")
-        print("")
+    
     
     def cooldownClass(self):
         if self.clashCD != 0:   
@@ -50,11 +38,20 @@ class Player(Character):
 class Fencer(Player):
     def __init__(self):
         super().__init__(8, "fencer")
-        self.superDesc = "Riposte: Dodge the attack and strike an equal blow. SpecialCooldown: " + str(self.specialCooldown)
     
-    def chaHelp(self):
-        self.help(self.superDesc)
-    
+    def help(self):
+        print("Options:")
+        print("LightAttack: Deal some minor damage to the enemy. Cooldown: " + str(self.lightAttackCD))
+        print("MediumAttack: Deal some medium damage to the enemy. Cooldown: " + str(self.mediumAttackCD))
+        print("HeavyAttack: Deal some major damage to the enemy. Cooldown: " + str(self.heavyAttackCD))
+        print("Clash: Force a clash with the enemy. Cooldown: " + str(self.clashCD))
+        print("Riposte: Dodge the attack and strike an equal blow. SpecialCooldown: " + str(self.specialCooldown))
+        print("Hp: Display your current health.")
+        print("EnemyHp: Display your enemy's current hp.")
+        print("Help: Get a list of commands.")
+        print("GiveUp: Give up like the coward you are.")
+        print("")
+        
     def chooseAttack(self, x):
             if x.lower() == "lightattack":
                 if self.lightAttackCD == 0:
