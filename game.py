@@ -61,10 +61,11 @@ while True:
     
     #Is here to fully break out of the loop
     if x.lower() == "giveup" or x.lower() == "g":
-        break    
+        break
     time.sleep(1)
     
-    #This is the section where the damage result is calculated
+    #This is the section where the damage results is calculated
+    
     pA = p.commitAttack()
     eA = e.commitAttack()
     
@@ -95,6 +96,7 @@ while True:
             #Neither the Player or Enemy wins the round
             else:
                 print("You clash with the enemy!")
+    #Does the obvious (These notes are for me, not you, go away)
     p.cooldownOptions()
     p.cooldownClass()
     e.cooldownOptions()
